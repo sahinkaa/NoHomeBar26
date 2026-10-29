@@ -1,0 +1,9 @@
+Package: com.sahinkaa.nohomebar26
+Name: No Home Bar 26
+Version: 1.0
+Architecture: iphoneos-arm64e
+Description: Hide the home indicator throughout iOS while keeping swipe gestures.
+Author: sahinkaa
+Maintainer: sahinkaa
+Section: Tweaks
+Depends: firmware (>= 26.0), mobilesubstrate
