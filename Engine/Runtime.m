@@ -43,8 +43,11 @@ static NHBAlphaSlot NHBAlphas[]={
     {NHB_LUMA,NULL},{NHB_STATIC,NULL},{NHB_AOD,NULL},{NHB_AFFORDANCE,NULL}
 };
 static char NHBIndicatorKey;
+#if defined(NHB_HOST_TEST)
 static NSMutableDictionary *NHBReport;
+#endif
 
+#if defined(NHB_HOST_TEST)
 static void NHBRecord(NSString *key,id value) {
     if(![NSThread isMainThread]) { dispatch_async(dispatch_get_main_queue(),^{NHBRecord(key,value);});return; }
     if(!NHBReport)NHBReport=[[NSMutableDictionary alloc] init];
@@ -62,6 +65,10 @@ static void NHBRecord(NSString *key,id value) {
     [[NSFileManager defaultManager] createDirectoryAtPath:[path stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:NULL];
     [NHBReport writeToFile:path atomically:YES];
 }
+#else
+static inline __attribute__((unused)) void NHBRecord(NSString *key, id value) { (void)key; (void)value; }
+#define NHBRecord(...) ((void)sizeof((NHBRecord(__VA_ARGS__), 0)))
+#endif
 static BOOL NHBHasType(Method method,NSUInteger count,const char *result,const char *argument) {
     if(!method || method_getNumberOfArguments(method)!=count)return NO;
     char *ret=method_copyReturnType(method);BOOL match=ret && !strcmp(ret,result);free(ret);
